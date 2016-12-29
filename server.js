@@ -1,5 +1,5 @@
 var request = require('request');
-// var ConfigurationCollection = require('./ConfigurationCollection');
+var conf = require('./config');
 // var TeamCityStatusChecker = require('./TeamCityStatusChecker');
 var blinkstick = require('blinkstick');
 // var config = require('./config.json');
@@ -54,8 +54,6 @@ function checkStatus() {
 				return p.lastBuildStatus === 'Failure';
 			});
 
-			// console.log(building.length, failed.length, body.Project);
-
 			if (building.length > 0) {
 				setLights('Building');
 			} else if (failed.length > 0) {
@@ -71,11 +69,9 @@ function setLights(status) {
 	switch (status) {
 		case 'Building':
 			led.blink('purple');
-			// console.log('building');
 			break;
 		case 'Success':
 			led.setColor('green');
-			// console.log('success');
 			break;
 		case 'Failure':
 			led.pulse('red', function() {
@@ -85,7 +81,6 @@ function setLights(status) {
 					});
 				});
 			});
-			// console.log('failed');
 			break;
 		default:
 			led.setColor('blue');

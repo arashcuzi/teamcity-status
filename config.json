@@ -1,10 +1,10 @@
 {
-    "baseUrl": "https://teamcity.nml.com/",
-    "user": "pet7915",
-    "pass": "CVP12345",
+    "url": "",
+    "user": "",
+    "pass": "",
     "configurations": [
         {
-            "id": "NGIS",
+            "id": "",
             "canTurnRed": true
         }
     ]
