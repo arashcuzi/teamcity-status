@@ -1,58 +1,90 @@
 var request = require('request');
+var conf = require('./config');
 var blinkstick = require('blinkstick');
 
 var led = blinkstick.findFirst();
+led.turnOff();
 
-var options = {
-  url: 'http://teamcity.nml.com/httpAuth/app/rest/cctray/projects.xml',
-  username: 'pet7915',
-  password: 'CVP12345'
-};
+var currentStatus = 'normal';
+var lastStatus = 'normal';
 
 function checkStatus() {
 	request.get(
-		options.url,
+		conf.url,
 		{
 			auth: {
-				user: options.username,
-				pass: options.password,
+				user: conf.user,
+				pass: conf.pass,
 				sendImmediately: true,
 			},
 			json: true
 		},
 		function(err, resp, body) {
-			// body.Project.forEach(p => {
-			// 	console.log(p.activity, p.lastBuildStatus);
-			// });
+			if (err) return err;
 
-			const building = body.Project.filter(p => {
-				return p.activity === 'Building';
-			});
-
-			const failed = body.Project.filter(p => {
-				return p.lastBuildStatus === 'Failure';
-			});
-
-			if (building.length !== 0) {
-				setLights('Building');
-			} else if (failed.length !== 0) {
-				setLights('Failure');
-			} else {
-				setLights('Success');
-			}
+			setStatus(body);
 		}
 	);
 }
 
+function setStatus(body) {
+	const building = getBuilds(body);
+	const failed = getFailed(body);
+	const build = building.length > 0 ? true : false;
+	const fail = failed.length > 0 ? true : false;
+
+	const status = getCurrentStatus(build, fail);
+	setCurrentStatus(status);
+
+	if (build) {
+		setLights('Building');
+	} else if (fail && currentStatus === lastStatus) {
+		setLights('Still broke');
+	} else if (fail) {
+		setLights('Failure');
+	} else {
+		setLights('Success');
+	}
+}
+
+function getCurrentStatus(b, f) {
+	if (b) return 'Building';
+	if (f) return 'Failure';
+
+	if (!b && !f) return 'Success';
+}
+
+function setCurrentStatus(newStatus) {
+	lastStatus = currentStatus;
+	currentStatus = newStatus;
+}
+
+function getBuilds(body) {
+	return body.Project.filter(p => p.activity === 'Building');
+}
+
+function getFailed(body) {
+	return body.Project.filter(p => p.lastBuildStatus === 'Failure');
+}
+
 function setLights(status) {
+	console.log(Date.now(), status);
+	led.turnOff();
 	switch (status) {
 		case 'Building':
-			led.setColor('purple');
+			led.blink('purple', { repeats: 5, interval: 500 }, function() {
+				led.setColor('purple');
+			});
 			break;
 		case 'Success':
 			led.setColor('green');
 			break;
 		case 'Failure':
+			led.blink('red', { repeats: 5, interval: 500 }, function() {
+				led.setColor('red');
+			});
+			break;
+		case 'Still broke':
 			led.setColor('red');
 			break;
 		default:
