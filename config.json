@@ -1,11 +1,5 @@
 {
-    "url": "",
-    "user": "",
-    "pass": "",
-    "configurations": [
-        {
-            "id": "",
-            "canTurnRed": true
-        }
-    ]
+    "url": "http://teamcity.nml.com/httpAuth/app/rest/cctray/projects.xml",
+    "user": "pet7915",
+    "pass": "CVP12345"
 }
