@@ -1,32 +1,8 @@
 var request = require('request');
-var conf = require('./config');
-// var TeamCityStatusChecker = require('./TeamCityStatusChecker');
 var blinkstick = require('blinkstick');
-// var config = require('./config.json');
 
-// var pollInterval = 10 * 1000;
-// var lightDelay = 5 * 1000;
-//
 var led = blinkstick.findFirst();
 
-led.setColor('blue');
-
-var currentStatus = 'normal';
-var lastStatus = 'normal';
-//
-// var configurations = new ConfigurationCollection(config, new TeamCityStatusChecker(), led);
-// checkStatusAndSetLight();
-//
-// setInterval(function(){
-//     checkStatusAndSetLight();
-// }, pollInterval);
-//
-// function checkStatusAndSetLight(){
-//     configurations.checkStatus();
-//     setInterval(function(){
-//         configurations.displayStatus();
-//     }, lightDelay);
-// }
 var options = {
   url: 'http://teamcity.nml.com/httpAuth/app/rest/cctray/projects.xml',
   username: 'pet7915',
@@ -45,7 +21,10 @@ function checkStatus() {
 			json: true
 		},
 		function(err, resp, body) {
-			// console.log(err);
+			// body.Project.forEach(p => {
+			// 	console.log(p.activity, p.lastBuildStatus);
+			// });
+
 			const building = body.Project.filter(p => {
 				return p.activity === 'Building';
 			});
@@ -54,9 +33,9 @@ function checkStatus() {
 				return p.lastBuildStatus === 'Failure';
 			});
 
-			if (building.length > 0) {
+			if (building.length !== 0) {
 				setLights('Building');
-			} else if (failed.length > 0) {
+			} else if (failed.length !== 0) {
 				setLights('Failure');
 			} else {
 				setLights('Success');
@@ -68,24 +47,20 @@ function checkStatus() {
 function setLights(status) {
 	switch (status) {
 		case 'Building':
-			led.blink('purple');
+			led.setColor('purple');
 			break;
 		case 'Success':
 			led.setColor('green');
 			break;
 		case 'Failure':
-			led.pulse('red', function() {
-				led.pulse('red', function() {
-					led.pulse('red', function() {
-						led.setColor('red');
-					});
-				});
-			});
+			led.setColor('red');
 			break;
 		default:
 			led.setColor('blue');
 	}
 }
+
+checkStatus();
 
 setInterval(function() {
 	checkStatus();
