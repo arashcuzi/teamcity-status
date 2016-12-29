@@ -1,15 +1,11 @@
 {
-    "baseUrl": "http://build.dev.blinds.com:81/",
-    "user": "",
-    "pass": "",
+    "baseUrl": "https://teamcity.nml.com/",
+    "user": "pet7915",
+    "pass": "CVP12345",
     "configurations": [
         {
-            "id": "bt2",
+            "id": "NGIS",
             "canTurnRed": true
-        },
-        {
-            "id": "bt17",
-            "canTurnRed": false
         }
     ]
 }
