@@ -1,5 +1,6 @@
 var request = require('request');
 var conf = require('./config');
+var request = require('request');
 var blinkstick = require('blinkstick');
 
 var led = blinkstick.findFirst();
@@ -57,7 +58,23 @@ function getCurrentStatus(b, f) {
   if (!b && !f) return 'Success';
 }
 
+function postToSlack() {
+  request({
+    url: 'https://hooks.slack.com/services/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', //URL to hit
+    method: 'POST',
+    payload: {"text": "This is a line of text in a channel.\nAnd this is another line of text."}
+    // body: 'Hello Hello! String body!' //Set the body as a string
+  }, function(error, response, body){
+    if(error) {
+        console.log(error);
+    } else {
+        console.log(response.statusCode, body);
+    }
+  });
+};
+
 function setCurrentStatus(newStatus) {
+  if (newStatus !== lastStatus) postToSlack(newStatus);
   lastStatus = currentStatus;
   currentStatus = newStatus;
 }
