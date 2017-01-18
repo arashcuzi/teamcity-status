@@ -3,9 +3,13 @@ var conf = require('./config');
 var request = require('request');
 var blinkstick = require('blinkstick');
 
-var led = blinkstick.findFirst();
-led.turnOff();
-led.setMode(3);
+var benderQuotes = require('./benderQuotes');
+
+// postToSlack();
+
+// var led = blinkstick.findFirst();
+// led.turnOff();
+// led.setMode(3);
 
 let ledTimeout;
 
@@ -26,6 +30,8 @@ function checkStatus() {
     function(err, resp, body) {
       if (err) return err;
 
+      // console.log(body.Project);
+
       setStatus({ Project: [body.Project[0]] });
     }
   );
@@ -38,7 +44,7 @@ function setStatus(body) {
   const fail = failed.length > 0 ? true : false;
 
   const status = getCurrentStatus(build, fail);
-  setCurrentStatus(status);
+  setCurrentStatus(status, building, failed);
 
   if (build) {
     setLights('Building');
@@ -58,11 +64,32 @@ function getCurrentStatus(b, f) {
   if (!b && !f) return 'Success';
 }
 
-function postToSlack() {
+function postToSlack(newStatus, building, failed) {
+  console.log(building, failed);
+  var predicate,
+    subject,
+    line2;
+
+  var rando = Math.floor(Math.random() * benderQuotes.length);
+
+  if (building.length !== 0) {
+    predicate = `is *${building[0].activity}*`;
+    subject = `Repo '${building[0].name.replace(/NGIS :: /, '')}'`;
+    line2 = `I'm a Bender. I bend girders. That's all I'm programmed to do.`;
+  } else if (failed.length !== 0) {
+    predicate = '*Failed to build*';
+    subject = `Repo '${failed[0].name.replace(/NGIS :: /, '')}''`;
+    line2 = `No, don't you see? I was a hero to broken robots 'cause I was one of them. But how can I sing about being damaged if I'm not? That's like Christina Aguilera singing in Spanish. Wait, that's it! I'll fake it!`;
+  } else {
+    subject = `All repos are`;
+    predicate = `*A-OK*!`;
+    line2 = benderQuotes[rando];
+  }
+
   request({
     url: 'https://hooks.slack.com/services/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', //URL to hit
     method: 'POST',
-    payload: {"text": "This is a line of text in a channel.\nAnd this is another line of text."}
+    body: JSON.stringify({'text': `${subject} ${predicate}\n${line2}`})
     // body: 'Hello Hello! String body!' //Set the body as a string
   }, function(error, response, body){
     if(error) {
@@ -73,8 +100,10 @@ function postToSlack() {
   });
 };
 
-function setCurrentStatus(newStatus) {
-  if (newStatus !== lastStatus) postToSlack(newStatus);
+function setCurrentStatus(newStatus, building, failed) {
+  console.log(`current-status: ${currentStatus}, new-status: ${newStatus}`);
+  console.log(newStatus !== lastStatus);
+  if (newStatus !== currentStatus) postToSlack(newStatus, building, failed);
   lastStatus = currentStatus;
   currentStatus = newStatus;
 }
@@ -88,19 +117,20 @@ function getFailed(body) {
 }
 
 function blink(color) {
-  led.setColor(color);
-
-  ledTimeout = setTimeout(function() {
-    led.setColor(0, 0, 0);
-    ledTimeout = setTimeout(function() {
-      blink(color);
-    }, 1000);
-  }, 1000);
+  return false;
+  // led.setColor(color);
+  //
+  // ledTimeout = setTimeout(function() {
+  //   led.setColor(0, 0, 0);
+  //   ledTimeout = setTimeout(function() {
+  //     blink(color);
+  //   }, 1000);
+  // }, 1000);
 }
 
 function stop() {
-  clearTimeout(ledTimeout);
-  led.setColor(0, 0, 0);
+  // clearTimeout(ledTimeout);
+  // led.setColor(0, 0, 0);
 }
 
 function setLights(status) {
@@ -109,17 +139,17 @@ function setLights(status) {
   stop();
   switch (status) {
     case 'Building':
-      blink('purple');
+      // blink('purple');
       break;
     case 'Success':
-      led.setColor('green');
+      // led.setColor('green');
       break;
     case 'Failure':
     case 'Still broke':
-      blink('red');
+      // blink('red');
       break;
     default:
-      led.setColor('blue');
+      // led.setColor('blue');
   }
 }
 

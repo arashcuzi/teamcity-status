@@ -1,0 +1,22 @@
+module.exports = [
+  `I hope he didn’t die. Unless he left a note naming me his successor, then I hope he did die.`,
+  `We’re making beer. I’m the brewery!`,
+  `Well, if jacking on will make strangers think I’m cool, I’ll do it.`,
+  `I’m so embarrassed. I wish everybody else was dead.`,
+  `Have you ever tried simply turning off your TV, sitting down with your child, and hitting them?`,
+  `There. Now no one can say I don’t own John Larroquette’s spine.`,
+  `Hey sexy mama. Wanna kill all humans?`,
+  `Blackmail is such an ugly word. I prefer extortion. The ‘x’ makes it sound cool.`,
+  `I got ants in my butt, and I needs to strut.`,
+  `Oh, no room for Bender, huh? Fine! I’ll go build my own lunar lander, with blackjack and hookers. In fact, forget the lunar lander and the blackjack. Ahh, screw the whole thing!`,
+  `That’ll teach those other horses to take drugs.`,
+  `That’s what they said about being alive!`,
+  `Game’s over, losers! I have all the money. Compare your lives to mine and then kill yourselves.`,
+  `Ah, Xmas Eve. Another pointless day where I accomplish nothing.`,
+  `O’ cruel fate, to be thusly boned! Ask not for whom the bone bones—it bones for thee.`,
+  `Honey, I wouldn’t talk about taste if I was wearing a lime green tank top.`,
+  `Hey, whose been messing with my radio? This isn’t alternative rock, it’s college rock.`,
+  `My story is a lot like yours, only more interesting ‘cause it involves robots.`,
+  `I don’t remember ever fighting Godzilla… But that is so what I would have done!`,
+  `We’ll soon stage an attack on technology worthy of being chronicled in an anthem by Rush!`
+];
