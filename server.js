@@ -4,6 +4,9 @@ var blinkstick = require('blinkstick');
 
 var led = blinkstick.findFirst();
 led.turnOff();
+led.setMode(3);
+
+let ledTimeout;
 
 var currentStatus = 'normal';
 var lastStatus = 'normal';
@@ -22,7 +25,7 @@ function checkStatus() {
 		function(err, resp, body) {
 			if (err) return err;
 
-			setStatus(body);
+			setStatus({ Project: [body.Project[0]] });
 		}
 	);
 }
@@ -67,25 +70,36 @@ function getFailed(body) {
 	return body.Project.filter(p => p.lastBuildStatus === 'Failure');
 }
 
+function blink(color) {
+	led.setColor(color);
+
+	ledTimeout = setTimeout(function() {
+		led.setColor(0, 0, 0);
+		ledTimeout = setTimeout(function() {
+			blink(color);
+		}, 1000);
+	}, 1000);
+}
+
+function stop() {
+  clearTimeout(ledTimeout);
+  led.setColor(0, 0, 0);
+}
+
 function setLights(status) {
-	console.log(Date.now(), status);
-	led.turnOff();
+	let now = new Date();
+	console.log(`${now.toUTCString()} status:`, status);
+	stop();
 	switch (status) {
 		case 'Building':
-			led.blink('purple', { repeats: 5, interval: 500 }, function() {
-				led.setColor('purple');
-			});
+			blink('purple');
 			break;
 		case 'Success':
 			led.setColor('green');
 			break;
 		case 'Failure':
-			led.blink('red', { repeats: 5, interval: 500 }, function() {
-				led.setColor('red');
-			});
-			break;
 		case 'Still broke':
-			led.setColor('red');
+			blink('red');
 			break;
 		default:
 			led.setColor('blue');
