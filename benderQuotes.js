@@ -18,5 +18,7 @@ module.exports = [
   `Hey, whose been messing with my radio? This isn’t alternative rock, it’s college rock.`,
   `My story is a lot like yours, only more interesting ‘cause it involves robots.`,
   `I don’t remember ever fighting Godzilla… But that is so what I would have done!`,
-  `We’ll soon stage an attack on technology worthy of being chronicled in an anthem by Rush!`
+  `We’ll soon stage an attack on technology worthy of being chronicled in an anthem by Rush!`,
+  `No, don't you see? I was a hero to broken robots 'cause I was one of them. But how can I sing about being damaged if I'm not? That's like Christina Aguilera singing in Spanish. Wait, that's it! I'll fake it!`,
+  `I'm a Bender. I bend girders. That's all I'm programmed to do.`
 ];

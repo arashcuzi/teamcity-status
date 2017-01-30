@@ -30,9 +30,9 @@ function checkStatus() {
     function(err, resp, body) {
       if (err) return err;
 
-      // console.log(body.Project);
+      // console.log(body);
 
-      setStatus({ Project: [body.Project[0]] });
+      setStatus(body);
     }
   );
 }
@@ -75,11 +75,11 @@ function postToSlack(newStatus, building, failed) {
   if (building.length !== 0) {
     predicate = `is *${building[0].activity}*`;
     subject = `Repo '${building[0].name.replace(/NGIS :: /, '')}'`;
-    line2 = `I'm a Bender. I bend girders. That's all I'm programmed to do.`;
+    line2 = benderQuotes[rando];
   } else if (failed.length !== 0) {
     predicate = '*Failed to build*';
     subject = `Repo '${failed[0].name.replace(/NGIS :: /, '')}''`;
-    line2 = `No, don't you see? I was a hero to broken robots 'cause I was one of them. But how can I sing about being damaged if I'm not? That's like Christina Aguilera singing in Spanish. Wait, that's it! I'll fake it!`;
+    line2 = benderQuotes[rando];
   } else {
     subject = `All repos are`;
     predicate = `*A-OK*!`;
