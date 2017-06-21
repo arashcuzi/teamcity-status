@@ -36,16 +36,7 @@ function setStatus(body) {
 
   const status = getCurrentStatus(build, fail);
   setCurrentStatus(status, building, failed);
-
-  if (build) {
-    setLights('Building');
-  } else if (fail && currentStatus === lastStatus) {
-    setLights('Still broke');
-  } else if (fail) {
-    setLights('Failure');
-  } else {
-    setLights('Success');
-  }
+  logToConsole(status);
 }
 
 function getCurrentStatus(b, f) {
@@ -78,7 +69,7 @@ function postToSlack(newStatus, building, failed) {
   }
 
   request({
-    url: conf.slack_webhook, // Slack webhook from config.json
+    url: config.slack_webhook, // Slack webhook from config.json
     method: 'POST',
     body: JSON.stringify({'text': `${subject} ${predicate}\n${line2}`})
     // body: 'Hello Hello! String body!' //Set the body as a string
@@ -105,6 +96,12 @@ function getBuilds(body) {
 
 function getFailed(body) {
   return body.Project.filter(p => p.lastBuildStatus === 'Failure');
+}
+
+function logToConsole(status) {
+  let now = new Date();
+  console.log(`${now.toUTCString()} status:`, status);
+  }
 }
 
 checkStatus();
