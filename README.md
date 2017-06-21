@@ -1,52 +1,32 @@
-#teamcity-buildlight
+#teamcity-status-node
 
-A node.js build light for TeamCity that works on Raspberry Pi as well as Linux, Mac and PC.  Drives a
-[Declom Visual Indicator](http://www.delcomproducts.com/products_usblmp.asp).  The light will be solid
-green if all monitored configurations that have canTurnRed: true have been built successfully and nothing is currently
-building.  The light will blink blue if any monitored configuration is building.  If any monitored configuration with
-canTurnRed: true has failed and nothing is building, the light will blink red.
+A node.js build status indicator for TeamCity that works on Raspberry Pi as well as Linux, Mac and PC.
 
 ##Configuration
-Open config.json and setup for your environment.  You will need TeamCity's build configuration id for each configuration
-you want to monitor.  You can obtain the build configuration id on the general settings tab of TeamCity's configuration
-editor.  If you want failed builds for a given configuration make the light blink red, set canTurnRed: true in
-the config file.
+Open config.json and setup for your environment. You will need TeamCity's URL, and creds to connect. Also for the slack integration you need to add the WebHook.
 
-You may want to set canTurnRed:false for configuration designed to build unstable branches.
+###For running locally
 
-##Supported Platforms
-This application is known to work on Mac and Linux platforms where [node-hid](https://www.npmjs.org/package/node-hid) can
-be installed.  It was designed and tested on Mac OS/X 10.9.2 and Raspian (all updates installed as of March 17, 2014).
-It has not been tested on Windows but should work provided that node-hid can be installed.
-
-Node-hid requires libudev-dev and libusb-1.0-0 to install successfully.  On Raspian, you can install these using:
+Clone the repo:
 
 ```shell
-sudo apt-get install libudev-dev libusb-1.0-0-dev
-```
-On Linux you also need to grant permissions to write to the Delcom device.  On Raspian, you can create a file:
-
-```shell
-sudo nano /etc/udev/rules.d/85-delcom.rules
+git clone <https/ssh_url>
 ```
 
-With the following rule (replace the group name with a group of your choice):
+Then install deps and run:
 
 ```shell
-SUBSYSTEM=="usb", ATTRS{idVendor}=="0fc5", ATTRS{idProduct}=="b080", ACTION=="add", SYMLINK+="delcom", MODE="0666", GROUP="[your group]"
+npm install && npm start
 ```
 
-You will have to reboot to make the rule take effect.
-
-##Development Prerequisites
-You need to install grunt-cli globally using:
+The app is also Docker ready:
 
 ```shell
-npm install grunt-cli -g
+docker build -t <teamcity_status> .
 ```
 
-You can then run tests using:
+Then:
 
 ```shell
-grunt
+docker run -d <teamcity_status>
 ```
