@@ -89,7 +89,7 @@ function postToSlack(newStatus, building, failed) {
   }
 
   request({
-    url: 'https://hooks.slack.com/services/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', //URL to hit
+    url: config.slack_webhook, // Slack webhook from config.json
     method: 'POST',
     body: JSON.stringify({'text': `${subject} ${predicate}\n${line2}`})
     // body: 'Hello Hello! String body!' //Set the body as a string
