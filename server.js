@@ -30,9 +30,11 @@ function checkStatus() {
     function(err, resp, body) {
       if (err) return err;
 
-      // console.log(body);
+      const e2e = body.Project.filter(p => p.name === 'NGIS :: Testing :: E2E/Regression Testing');
 
-      setStatus(body);
+      // console.log(e2e);
+
+      setStatus({ Project: e2e });
     }
   );
 }
@@ -73,16 +75,16 @@ function postToSlack(newStatus, building, failed) {
   var rando = Math.floor(Math.random() * benderQuotes.length);
 
   if (building.length !== 0) {
-    predicate = `is *${building[0].activity}*`;
-    subject = `Repo '${building[0].name.replace(/NGIS :: /, '')}'`;
+    predicate = '*running*';
+    subject = 'E2E\'s are';
     line2 = benderQuotes[rando];
   } else if (failed.length !== 0) {
-    predicate = '*Failed to build*';
-    subject = `Repo '${failed[0].name.replace(/NGIS :: /, '')}''`;
+    predicate = '*failed to build*';
+    subject = 'E2E\'s';
     line2 = benderQuotes[rando];
   } else {
-    subject = `All repos are`;
-    predicate = `*A-OK*!`;
+    subject = 'E2E\'s are';
+    predicate = '*A-OK*!';
     line2 = benderQuotes[rando];
   }
 
