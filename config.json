@@ -1,5 +1,5 @@
 {
-    "url": "",
+    "url": "http://teamcity.nml.com/httpAuth/app/rest/cctray/projects.xml",
     "user": "",
     "pass": ""
 }
