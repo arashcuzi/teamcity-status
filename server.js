@@ -101,7 +101,6 @@ function getFailed(body) {
 function logToConsole(status) {
   let now = new Date();
   console.log(`${now.toUTCString()} status:`, status);
-  }
 }
 
 checkStatus();
