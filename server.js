@@ -1,17 +1,6 @@
 var request = require('request');
 var conf = require('./config');
-var request = require('request');
-var blinkstick = require('blinkstick');
-
 var benderQuotes = require('./benderQuotes');
-
-// postToSlack();
-
-// var led = blinkstick.findFirst();
-// led.turnOff();
-// led.setMode(3);
-
-let ledTimeout;
 
 var currentStatus = 'normal';
 var lastStatus = 'normal';
@@ -116,43 +105,6 @@ function getBuilds(body) {
 
 function getFailed(body) {
   return body.Project.filter(p => p.lastBuildStatus === 'Failure');
-}
-
-function blink(color) {
-  return false;
-  // led.setColor(color);
-  //
-  // ledTimeout = setTimeout(function() {
-  //   led.setColor(0, 0, 0);
-  //   ledTimeout = setTimeout(function() {
-  //     blink(color);
-  //   }, 1000);
-  // }, 1000);
-}
-
-function stop() {
-  // clearTimeout(ledTimeout);
-  // led.setColor(0, 0, 0);
-}
-
-function setLights(status) {
-  let now = new Date();
-  console.log(`${now.toUTCString()} status:`, status);
-  stop();
-  switch (status) {
-    case 'Building':
-      // blink('purple');
-      break;
-    case 'Success':
-      // led.setColor('green');
-      break;
-    case 'Failure':
-    case 'Still broke':
-      // blink('red');
-      break;
-    default:
-      // led.setColor('blue');
-  }
 }
 
 checkStatus();
