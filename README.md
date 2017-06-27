@@ -1,11 +1,11 @@
-#teamcity-status-node
+# teamcity-status-node
 
 A node.js build status indicator for TeamCity that works on Raspberry Pi as well as Linux, Mac and PC.
 
-##Configuration
+## Configuration
 Open config.json and setup for your environment. You will need TeamCity's URL, and creds to connect. Also for the slack integration you need to add the WebHook.
 
-###For running locally
+### For running locally
 
 Clone the repo:
 
